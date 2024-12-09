@@ -2,6 +2,33 @@ const audioPlayer = new Audio();
 let musicas = [];
 let musicaAtualIndex = 0;
 
+// Função para obter a lista de arquivos da pasta 'musicas' no GitHub usando a API
+function obterListaMusicas() {
+  fetch('https://api.github.com/repos/ribeiro-123/player/contents/musicas')
+    .then(response => response.json())
+    .then(data => {
+      musicas = data.filter(file => file.name.endsWith('.mp3')).map(file => file.name);
+      if (musicas.length > 0) {
+        // Inicializa o player com a primeira música
+        carregarMusica(musicaAtualIndex);
+      }
+    })
+    .catch(error => console.error('Erro ao carregar a lista de músicas:', error));
+}
+
+// Função para carregar a música e seus metadados
+function carregarMusica(index) {
+  const musica = musicas[index];
+  const musicaUrl = `https://raw.githubusercontent.com/ribeiro-123/player/master/musicas/${musica}`;
+  
+  audioPlayer.src = musicaUrl;
+  audioPlayer.load();
+  // Obtém os metadados da música
+  obterMetadados(musicaUrl);
+  // Atualiza o título da música
+  document.getElementById('titulo-musica').textContent = musica.replace('.mp3', '');
+}
+
 // Função para obter os metadados da música
 function obterMetadados(musica) {
   jsmediatags.read(musica, {
@@ -17,24 +44,8 @@ function obterMetadados(musica) {
   });
 }
 
-// Requisição para obter a lista de músicas do servidor
-fetch('https://github.com/ribeiro-123/player/tree/master/musicas')  // Este caminho pode ser ajustado conforme a estrutura do seu repositório
-  .then(response => response.json())
-  .then(data => {
-    musicas = data;
-    if (musicas.length > 0) {
-      // Construindo o caminho para o arquivo de áudio no formato raw do GitHub
-      const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
-      
-      audioPlayer.src = musicaUrl;
-      audioPlayer.load();
-      // Obtém os metadados da música
-      obterMetadados(musicaUrl);
-      // Atualiza o título da música
-      document.getElementById('titulo-musica').textContent = musicas[musicaAtualIndex].replace('.mp3', '');
-    }
-  })
-  .catch(error => console.error('Erro ao carregar as músicas:', error));
+// Requisita a lista de músicas
+obterListaMusicas();
 
 // Funções para os botões
 const playPauseBtn = document.getElementById('play-btn');
@@ -58,22 +69,12 @@ playPauseBtn.addEventListener('click', () => {
 // Funções para tocar a próxima e a anterior música
 function tocarProximaMusica() {
   musicaAtualIndex = (musicaAtualIndex + 1) % musicas.length;
-  const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
-  
-  audioPlayer.src = musicaUrl;
-  audioPlayer.play();
-  document.getElementById('titulo-musica').textContent = musicas[musicaAtualIndex].replace('.mp3', '');
-  obterMetadados(musicaUrl);
+  carregarMusica(musicaAtualIndex);
 }
 
 function tocarMusicaAnterior() {
   musicaAtualIndex = (musicaAtualIndex - 1 + musicas.length) % musicas.length;
-  const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
-  
-  audioPlayer.src = musicaUrl;
-  audioPlayer.play();
-  document.getElementById('titulo-musica').textContent = musicas[musicaAtualIndex].replace('.mp3', '');
-  obterMetadados(musicaUrl);
+  carregarMusica(musicaAtualIndex);
 }
 
 // Configura os botões de avanço e retrocesso
