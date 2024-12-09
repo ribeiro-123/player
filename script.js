@@ -18,7 +18,7 @@ function obterMetadados(musica) {
 }
 
 // Requisição para obter a lista de músicas do servidor
-fetch('../musicas')  // Este caminho pode ser ajustado conforme a estrutura do seu repositório
+fetch('https://github.com/ribeiro-123/sleep/raw/main/musicas/')  // Este caminho pode ser ajustado conforme a estrutura do seu repositório
   .then(response => response.json())
   .then(data => {
     musicas = data;
