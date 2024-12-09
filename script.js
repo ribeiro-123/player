@@ -16,32 +16,16 @@ function obterListaMusicas() {
     .catch(error => console.error('Erro ao carregar a lista de músicas:', error));
 }
 
-// Função para carregar a música e seus metadados
+// Função para carregar a música
 function carregarMusica(index) {
   const musica = musicas[index];
   const musicaUrl = `https://raw.githubusercontent.com/ribeiro-123/player/master/musicas/${musica}`;
   
   audioPlayer.src = musicaUrl;
   audioPlayer.load();
-  // Obtém os metadados da música
-  obterMetadados(musicaUrl);
+  audioPlayer.play(); // Toca a música imediatamente após carregar
   // Atualiza o título da música
   document.getElementById('titulo-musica').textContent = musica.replace('.mp3', '');
-}
-
-// Função para obter os metadados da música
-function obterMetadados(musica) {
-  jsmediatags.read(musica, {
-    onSuccess: function(tag) {
-      const artista = tag.tags.artist || 'Desconhecido';  // Se não houver artista, exibe "Desconhecido"
-      console.log('Artista:', artista);
-      // Atualiza o nome do artista no HTML
-      document.getElementById('artista').textContent = artista;
-    },
-    onError: function(error) {
-      console.error('Erro ao ler metadados:', error);
-    }
-  });
 }
 
 // Requisita a lista de músicas
@@ -68,12 +52,12 @@ playPauseBtn.addEventListener('click', () => {
 
 // Funções para tocar a próxima e a anterior música
 function tocarProximaMusica() {
-  musicaAtualIndex = (musicaAtualIndex + 1) % musicas.length;
+  musicaAtualIndex = (musicaAtualIndex + 1) % musicas.length; // Avança para a próxima
   carregarMusica(musicaAtualIndex);
 }
 
 function tocarMusicaAnterior() {
-  musicaAtualIndex = (musicaAtualIndex - 1 + musicas.length) % musicas.length;
+  musicaAtualIndex = (musicaAtualIndex - 1 + musicas.length) % musicas.length; // Volta para a música anterior
   carregarMusica(musicaAtualIndex);
 }
 
