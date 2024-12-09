@@ -24,7 +24,7 @@ fetch('https://github.com/ribeiro-123/player/tree/master/musicas')  // Este cami
     musicas = data;
     if (musicas.length > 0) {
       // Construindo o caminho para o arquivo de áudio no formato raw do GitHub
-      const musicaUrl = `https://github.com/ribeiro-123/player/raw/main/musicas/${musicas[musicaAtualIndex]}`;
+      const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
       
       audioPlayer.src = musicaUrl;
       audioPlayer.load();
@@ -58,7 +58,7 @@ playPauseBtn.addEventListener('click', () => {
 // Funções para tocar a próxima e a anterior música
 function tocarProximaMusica() {
   musicaAtualIndex = (musicaAtualIndex + 1) % musicas.length;
-  const musicaUrl = `https://github.com/ribeiro-123/player/raw/main/musicas/${musicas[musicaAtualIndex]}`;
+  const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
   
   audioPlayer.src = musicaUrl;
   audioPlayer.play();
@@ -68,7 +68,7 @@ function tocarProximaMusica() {
 
 function tocarMusicaAnterior() {
   musicaAtualIndex = (musicaAtualIndex - 1 + musicas.length) % musicas.length;
-  const musicaUrl = `https://github.com/ribeiro-123/player/raw/main/musicas/${musicas[musicaAtualIndex]}`;
+  const musicaUrl = `https://github.com/ribeiro-123/player/tree/master/${musicas[musicaAtualIndex]}`;
   
   audioPlayer.src = musicaUrl;
   audioPlayer.play();
